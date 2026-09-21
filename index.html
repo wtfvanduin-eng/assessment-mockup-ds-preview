@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tidalex · Assessment · Design System v1.1.2</title>
+<style>
+:root {
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+
+  --fs-eyebrow: 10px;
+  --fs-meta: 11.5px;
+  --fs-ui: 12.5px;
+  --fs-body: 13.5px;
+  --fs-section: 13px;
+  --fs-object: 15.5px;
+
+  --tidal: #0e7c86;
+  --tidal-deep: #0a5b62;
+  --tidal-tint: #e6f2f3;
+  --ink: #14201f;
+  --mute: #6b7674;
+  --line: #dfe3e2;
+  --bg: #f7f8f8;
+  --card: #fff;
+  --radius: 2px;
+}
+
+:root {
+  /* Additions required to complete the source token set. */
+  --info: #276d8a;
+  --info-tint: #e9f3f7;
+  --success: #2f6f4e;
+  --success-tint: #eaf4ee;
+  --warning: #8a5a00;
+  --warning-tint: #fff4d6;
+  --danger: #a33b32;
+  --danger-tint: #fbecea;
+  --focus: #126fbd;
+  --disabled-bg: #eef0ef;
+  --surface-subtle: #f2f5f4;
+  --surface-hover: #edf5f5;
+  --surface-selected: var(--tidal-tint);
+  --control-border: #87928f;
+  --control-h: 32px;
+  --control-h-compact: 28px;
+  --icon-size: 16px;
+  --measure-legal: 78ch;
+  --shadow-dialog: 0 16px 40px rgb(20 32 31 / 18%);
+  --motion-fast: 140ms;
+  --font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: light; scroll-padding-top: var(--sp-6); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+}
+
+button, input, select, textarea { font: inherit; }
+button, [role="button"], a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+a { color: var(--tidal-deep); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.tds-skip-link {
+  background: var(--ink);
+  color: #fff;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  left: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  position: fixed;
+  top: 0;
+  transform: translateY(-120%);
+  z-index: 1000;
+}
+.tds-skip-link:focus { transform: translateY(var(--sp-2)); }
+
+.tds-eyebrow {
+  color: var(--mute);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: .06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.tds-meta { color: var(--mute); font-size: var(--fs-meta); }
+.tds-section-title { margin: 0; font-size: var(--fs-section); font-weight: 600; }
+.tds-object-title { margin: 0; font-size: var(--fs-object); font-weight: 600; line-height: 1.3; }
+
+.tds-button,
+.tds-icon-button {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  gap: var(--sp-1);
+  height: var(--control-h);
+  justify-content: center;
+  line-height: 1;
+  transition: background-color var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+}
+
+.tds-button { padding: 0 var(--sp-3); }
+.tds-button--compact, .tds-icon-button--compact { height: var(--control-h-compact); }
+.tds-button--primary { background: var(--tidal); color: #fff; }
+.tds-button--primary:hover { background: var(--tidal-deep); }
+.tds-button--secondary { background: var(--card); border-color: var(--line); color: var(--ink); }
+.tds-button--secondary:hover, .tds-icon-button:hover { background: var(--tidal-tint); border-color: var(--tidal); }
+.tds-button--quiet, .tds-icon-button { background: transparent; color: var(--tidal-deep); }
+.tds-button--quiet:hover { background: var(--tidal-tint); }
+.tds-button--danger { background: var(--danger); color: #fff; }
+.tds-button--danger:hover { background: #7f2e27; }
+.tds-button:active, .tds-icon-button:active { transform: translateY(1px); }
+.tds-button:disabled, .tds-icon-button:disabled { background: var(--disabled-bg); border-color: var(--line); color: var(--mute); cursor: not-allowed; opacity: .72; transform: none; }
+.tds-icon-button { padding: 0; width: var(--control-h); }
+.tds-icon-button--compact { width: var(--control-h-compact); }
+.tds-icon { display: inline-block; height: var(--icon-size); width: var(--icon-size); }
+
+.tds-field { display: grid; gap: var(--sp-1); }
+.tds-label { font-size: var(--fs-ui); font-weight: 500; }
+.tds-required { color: var(--danger); }
+.tds-input, .tds-select, .tds-textarea {
+  background: var(--card);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: var(--fs-ui);
+  min-height: var(--control-h);
+  padding: 0 var(--sp-2);
+  width: 100%;
+}
+.tds-textarea { line-height: 1.45; min-height: 88px; padding-block: var(--sp-2); resize: vertical; }
+.tds-input:hover, .tds-select:hover, .tds-textarea:hover { border-color: var(--tidal); }
+.tds-input[aria-invalid="true"], .tds-select[aria-invalid="true"], .tds-textarea[aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+.tds-input:disabled, .tds-select:disabled, .tds-textarea:disabled { background: var(--disabled-bg); color: var(--mute); cursor: not-allowed; }
+.tds-field__hint, .tds-field__error { font-size: var(--fs-meta); }
+.tds-field__hint { color: var(--mute); }
+.tds-field__error { color: var(--danger); font-weight: 500; }
+
+.tds-checkbox { align-items: flex-start; cursor: pointer; display: inline-flex; font-size: var(--fs-ui); gap: var(--sp-2); }
+.tds-checkbox input { accent-color: var(--tidal); height: 16px; margin: 1px 0 0; width: 16px; }
+.tds-checkbox:has(input:disabled) { color: var(--mute); cursor: not-allowed; }
+
+.tds-segmented { background: var(--disabled-bg); border: 1px solid var(--line); border-radius: var(--radius); display: inline-flex; padding: 2px; }
+.tds-segmented label { position: relative; }
+.tds-segmented input { inset: 0; opacity: 0; position: absolute; }
+.tds-segmented span { align-items: center; border: 1px solid transparent; border-radius: var(--radius); cursor: pointer; display: flex; font-size: var(--fs-ui); height: var(--control-h-compact); padding: 0 var(--sp-2); }
+.tds-segmented input:checked + span { background: var(--card); border-color: var(--line); color: var(--tidal-deep); font-weight: 600; }
+.tds-segmented input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.tds-badge { align-items: center; background: var(--disabled-bg); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); display: inline-flex; font-size: var(--fs-meta); font-weight: 500; gap: var(--sp-1); line-height: 18px; min-height: 20px; padding: 0 var(--sp-2); white-space: nowrap; }
+.tds-badge--info { background: var(--info-tint); border-color: #b9d7e3; color: var(--info); }
+.tds-badge--success { background: var(--success-tint); border-color: #bad7c6; color: var(--success); }
+.tds-badge--warning { background: var(--warning-tint); border-color: #e4ca82; color: var(--warning); }
+.tds-badge--danger { background: var(--danger-tint); border-color: #e7b7b2; color: var(--danger); }
+
+.tds-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+.tds-panel__header { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: var(--sp-3); justify-content: space-between; min-height: 48px; padding: var(--sp-2) var(--sp-3); }
+.tds-panel__body { padding: var(--sp-3); }
+
+.tds-object-header { align-items: flex-start; display: flex; gap: var(--sp-4); justify-content: space-between; padding: var(--sp-4); }
+.tds-object-header__identity { display: grid; gap: var(--sp-1); min-width: 0; }
+.tds-object-header__title-line, .tds-object-header__actions { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tds-object-header__title-line { gap: var(--sp-3); }
+
+.tds-section { display: grid; gap: var(--sp-3); padding-block: var(--sp-4); }
+.tds-section__header { align-items: center; display: flex; gap: var(--sp-3); justify-content: space-between; }
+.tds-divider { border: 0; border-top: 1px solid var(--line); margin: var(--sp-4) 0; }
+
+.tds-toolbar, .tds-filter-bar { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tds-toolbar { justify-content: space-between; }
+.tds-toolbar__group, .tds-filter-bar__group { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tds-filter-bar { background: var(--card); border-bottom: 1px solid var(--line); justify-content: space-between; padding: var(--sp-2) var(--sp-3); }
+.tds-filter-bar .tds-input, .tds-filter-bar .tds-select { width: auto; }
+
+.tds-queue { list-style: none; margin: 0; padding: 0; }
+.tds-queue > li + li { border-top: 1px solid var(--line); }
+.tds-queue-row { align-items: flex-start; background: transparent; border: 0; color: inherit; cursor: pointer; display: flex; gap: var(--sp-3); justify-content: space-between; padding: var(--sp-2) var(--sp-3); text-align: left; text-decoration: none; width: 100%; }
+.tds-queue-row:hover { background: var(--surface-hover); }
+.tds-queue-row[aria-current="true"], .tds-queue-row[aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 3px 0 0 var(--tidal); }
+.tds-queue-row__main { display: grid; gap: 2px; min-width: 0; }
+.tds-queue-row__name { font-size: var(--fs-ui); font-weight: 500; }
+.tds-queue-row__aside { align-items: flex-end; display: flex; flex-direction: column; gap: var(--sp-1); }
+
+.tds-callout { background: var(--info-tint); border-left: 3px solid var(--info); display: grid; gap: var(--sp-1); padding: var(--sp-3); }
+.tds-callout--warning { background: var(--warning-tint); border-left-color: var(--warning); }
+.tds-callout--danger { background: var(--danger-tint); border-left-color: var(--danger); }
+.tds-callout__title { font-size: var(--fs-section); font-weight: 600; }
+.tds-callout p { margin: 0; }
+
+.tds-empty-state { align-items: center; color: var(--mute); display: flex; flex-direction: column; gap: var(--sp-2); justify-content: center; min-height: 180px; padding: var(--sp-6); text-align: center; }
+.tds-empty-state h3 { color: var(--ink); font-size: var(--fs-section); margin: 0; }
+.tds-empty-state p { margin: 0; max-width: 48ch; }
+
+.tds-evidence-list { border-block: 1px solid var(--line); }
+.tds-evidence-row + .tds-evidence-row { border-top: 1px solid var(--line); }
+.tds-evidence-row__summary { align-items: center; display: grid; gap: var(--sp-3); grid-template-columns: minmax(0, 1fr) auto auto; padding: var(--sp-2) 0; }
+.tds-evidence-row__identity { display: grid; gap: 2px; min-width: 0; }
+.tds-evidence-row__title { font-size: var(--fs-ui); font-weight: 500; }
+.tds-evidence-row__detail { background: var(--bg); border-top: 1px solid var(--line); padding: var(--sp-3); }
+
+.tds-legal-block { display: grid; gap: var(--sp-3); max-width: var(--measure-legal); }
+.tds-legal-block__header { display: grid; gap: var(--sp-1); }
+.tds-legal-block__text { font-size: var(--fs-body); line-height: 1.55; }
+.tds-legal-block__text p { margin: 0 0 var(--sp-3); }
+.tds-legal-paragraph { display: grid; gap: var(--sp-2); grid-template-columns: 28px minmax(0, 1fr); }
+.tds-legal-paragraph__number { color: var(--mute); font-size: var(--fs-meta); padding-top: 2px; }
+
+.tds-disclosure__trigger { align-items: center; background: transparent; border: 0; color: var(--ink); cursor: pointer; display: flex; font-size: var(--fs-section); font-weight: 600; gap: var(--sp-2); padding: var(--sp-2) 0; width: 100%; }
+.tds-disclosure__chevron { color: var(--tidal-deep); transition: transform var(--motion-fast); }
+.tds-disclosure__trigger[aria-expanded="true"] .tds-disclosure__chevron { transform: rotate(90deg); }
+.tds-disclosure__content { padding: var(--sp-2) 0 var(--sp-3) var(--sp-6); }
+
+.tds-dialog { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-dialog); color: var(--ink); max-width: min(560px, calc(100vw - 32px)); padding: 0; width: 100%; }
+.tds-dialog::backdrop { background: rgb(20 32 31 / 48%); }
+.tds-dialog__header { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: var(--sp-3); justify-content: space-between; padding: var(--sp-3) var(--sp-4); }
+.tds-dialog__body { padding: var(--sp-4); }
+.tds-dialog__footer { align-items: center; background: var(--bg); border-top: 1px solid var(--line); display: flex; gap: var(--sp-2); justify-content: flex-end; padding: var(--sp-3) var(--sp-4); }
+
+.tds-live-status { align-items: center; color: var(--mute); display: inline-flex; font-size: var(--fs-meta); gap: var(--sp-1); min-height: 24px; }
+.tds-system-banner { align-items: flex-start; background: var(--info-tint); border-bottom: 1px solid #b9d7e3; display: flex; gap: var(--sp-3); padding: var(--sp-2) var(--sp-4); }
+.tds-system-banner--warning { background: var(--warning-tint); border-bottom-color: #e4ca82; }
+
+.tds-table-wrap { border: 1px solid var(--line); max-width: 100%; overflow: auto; }
+.tds-table { border-collapse: collapse; font-size: var(--fs-ui); min-width: 680px; width: 100%; }
+.tds-table caption { font-size: var(--fs-section); font-weight: 600; padding: var(--sp-3); text-align: left; }
+.tds-table th { background: var(--surface-subtle); color: var(--ink); font-weight: 600; text-align: left; }
+.tds-table th, .tds-table td { border-top: 1px solid var(--line); padding: var(--sp-2) var(--sp-3); vertical-align: middle; }
+.tds-table tbody tr:hover { background: var(--surface-hover); }
+.tds-table__numeric { font-variant-numeric: tabular-nums; text-align: right !important; }
+.tds-pagination { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); justify-content: space-between; padding-top: var(--sp-3); }
+
+.tds-provenance { background: var(--surface-subtle); border-block: 1px solid var(--line); display: grid; gap: var(--sp-2); grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); padding: var(--sp-2) var(--sp-3); }
+.tds-provenance__item { display: grid; gap: 2px; min-width: 0; }
+.tds-provenance__label { color: var(--mute); font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.tds-provenance__value { font-size: var(--fs-meta); overflow-wrap: anywhere; }
+
+.tds-decision-record { border-left: 3px solid var(--tidal); display: grid; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); }
+.tds-decision-record--stale { background: var(--warning-tint); border-left-color: var(--warning); }
+.tds-decision-record__header { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); justify-content: space-between; }
+.tds-approval { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tds-audit-list { border-block: 1px solid var(--line); }
+.tds-audit-event { display: grid; gap: var(--sp-3); grid-template-columns: 128px minmax(0, 1fr) auto; padding: var(--sp-2) 0; }
+.tds-audit-event + .tds-audit-event { border-top: 1px solid var(--line); }
+.tds-audit-event time { color: var(--mute); font-size: var(--fs-meta); font-variant-numeric: tabular-nums; }
+
+@media (forced-colors: active) {
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid Highlight; }
+  .tds-badge, .tds-panel, .tds-table-wrap, .tds-callout, .tds-decision-record { border: 1px solid CanvasText; }
+  .tds-queue-row[aria-current="true"], .tds-queue-row[aria-selected="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
+}
+
+@media (max-width: 560px) {
+  .tds-audit-event { grid-template-columns: 1fr; gap: var(--sp-1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+/* v1.1.2 — reusable state variants identified by the Assessment pilot */
+.tds-input[readonly],
+.tds-textarea[readonly] {
+  background: var(--surface-subtle);
+  border-color: var(--line);
+  color: var(--ink);
+  cursor: text;
+}
+
+.tds-live-status--success { color: var(--success); }
+.tds-live-status--warning { color: var(--warning); }
+.tds-live-status--danger { color: var(--danger); font-weight: 500; }
+
+
+.tds-app-shell { min-height: 100vh; }
+
+.tds-app-header {
+  align-items: center;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: var(--sp-4);
+  justify-content: space-between;
+  min-height: 52px;
+  padding: var(--sp-2) var(--sp-4);
+}
+
+.tds-workbench {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: minmax(210px, 260px) minmax(440px, 1fr) minmax(240px, 320px);
+  min-height: calc(100vh - 52px);
+  padding: var(--sp-3);
+}
+
+.tds-workbench--no-left { grid-template-columns: minmax(440px, 1fr) minmax(240px, 320px); }
+.tds-workbench--no-right { grid-template-columns: minmax(210px, 260px) minmax(440px, 1fr); }
+
+.tds-rail,
+.tds-work-area {
+  align-self: start;
+  min-width: 0;
+}
+
+.tds-rail {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  max-height: calc(100vh - 76px);
+  overflow: auto;
+  position: sticky;
+  top: var(--sp-3);
+}
+
+.tds-rail__header {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tds-rail__body { min-width: 0; }
+.tds-work-area { display: grid; gap: var(--sp-3); }
+.tds-content-grid { display: grid; gap: var(--sp-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tds-stack { display: grid; gap: var(--sp-3); }
+.tds-stack--compact { gap: var(--sp-2); }
+.tds-inline { align-items: center; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tds-cluster { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.tds-push-end { margin-inline-start: auto; }
+.tds-scroll-region { max-height: 420px; overflow: auto; }
+
+@media (max-width: 1050px) {
+  .tds-workbench { grid-template-columns: minmax(210px, 250px) minmax(0, 1fr); }
+  .tds-workbench > .tds-rail--right { grid-column: 2; max-height: none; position: static; }
+  .tds-content-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .tds-app-header { align-items: flex-start; flex-direction: column; }
+  .tds-workbench, .tds-workbench--no-left, .tds-workbench--no-right { grid-template-columns: 1fr; padding: var(--sp-2); }
+  .tds-workbench > .tds-rail--right { grid-column: auto; }
+  .tds-rail { max-height: none; position: static; }
+  .tds-object-header { flex-direction: column; }
+  .tds-object-header__actions { width: 100%; }
+  .tds-dialog__footer { align-items: stretch; flex-direction: column-reverse; }
+  .tds-dialog__footer .tds-button { width: 100%; }
+}
+
+
+
+/* v1.1.2 — semantic visibility */
+[hidden] { display: none; }
+</style>
+</head>
+<body>
+<a class="tds-skip-link" href="#assessment-main">Skip to current Material Provision</a>
+<div class="tds-app-shell">
+<header class="tds-app-header">
+  <div>
+    <div class="tds-eyebrow">Tidalex · Assessment</div>
+    <div class="tds-inline">
+      <h1 class="tds-object-title">Q3 2026 DORA gap assessment</h1>
+      <span class="tds-badge">Draft assessment set</span>
+    </div>
+  </div>
+  <div class="tds-inline">
+    <label class="tds-field">
+      <span class="tds-label">Prototype scenario</span>
+      <select class="tds-select" id="scenario" aria-label="Prototype scenario">
+        <option value="not-reviewed">Not reviewed</option>
+        <option value="in-progress">Assessment in progress</option>
+        <option value="saving">Saving</option>
+        <option value="saved">Saved</option>
+        <option value="save-failed">Save failed</option>
+        <option value="compliant">Compliant</option>
+        <option value="partial">Partially compliant</option>
+        <option value="non-compliant">Non-compliant</option>
+        <option value="not-applicable">Not applicable</option>
+        <option value="ready">Ready for review</option>
+        <option value="approved">Approved</option>
+        <option value="returned">Returned for changes</option>
+        <option value="stale-grouping">Stale — grouping changed</option>
+        <option value="stale-context">Stale — legal context changed</option>
+        <option value="no-evidence">No evidence linked</option>
+        <option value="evidence-linked">Evidence linked</option>
+        <option value="remediation">Remediation required</option>
+        <option value="loading">Loading</option>
+        <option value="error">Error</option>
+        <option value="no-selection">No Material Provision selected</option>
+        <option value="empty-queue">Empty queue</option>
+        <option value="no-results">No filter results</option>
+      </select>
+    </label>
+  </div>
+</header>
+
+<div class="tds-system-banner" id="basis-banner">
+  <div>
+    <div class="tds-eyebrow">Assessment basis</div>
+    <div class="tds-inline">
+      <strong>Officer model · Our clustering · Officer context map</strong>
+      <span class="tds-badge tds-badge--info">Calculated outputs</span>
+    </div>
+    <div class="tds-meta">Requirement Cluster + Legal Context Map → Material Provision + Assessment Package</div>
+  </div>
+  <div class="tds-push-end">
+    <button class="tds-button tds-button--secondary" id="basis-button">Review basis</button>
+  </div>
+</div>
+
+<div class="tds-workbench">
+  <aside class="tds-rail" aria-label="Assessment context and Material Provision queue">
+    <header class="tds-rail__header">
+      <div class="tds-eyebrow">Assessment set</div>
+      <h2 class="tds-section-title">DORA core duties</h2>
+      <div class="tds-meta">Meridiaan Betaaldiensten B.V. · Payment institution</div>
+      <div class="tds-inline">
+        <span class="tds-badge">60 provisions</span>
+        <span class="tds-badge tds-badge--warning" id="queue-progress">3 not reviewed · 2 ready · 1 assessed</span>
+      </div>
+      <button class="tds-button tds-button--secondary tds-button--compact" id="next-unreviewed">Next not reviewed</button>
+    </header>
+    <div class="tds-rail__body">
+      <div class="tds-panel__body tds-stack tds-stack--compact">
+        <label class="tds-field"><span class="tds-label">Smart queue</span>
+          <select class="tds-select" id="smart-queue">
+            <option>All Material Provisions</option>
+            <option>CIF-relevant obligations</option>
+            <option>Controls already linked</option>
+            <option>Applicability review</option>
+            <option>Third-party / incident topics</option>
+            <option>Gaps without remediation owner</option>
+            <option>Waiting for review</option>
+          </select>
+        </label>
+        <label class="tds-field"><span class="tds-label">Find</span><input class="tds-input" id="queue-search" placeholder="Find Material Provision"></label>
+        <div class="tds-filter-bar">
+          <div class="tds-filter-bar__group">
+            <button class="tds-button tds-button--secondary tds-button--compact" id="filters-button">Filters</button>
+            <span class="tds-meta">Topic · modality · CIF condition · scope · controls · result</span>
+          </div>
+        </div>
+      </div>
+      <div id="queue-region" aria-live="polite">
+        <ul class="tds-queue" id="queue-list">
+          <li><button class="tds-queue-row" aria-current="true" data-mp="MP-0042"><span class="tds-queue-row__main"><span class="tds-queue-row__name">ICT risk management framework review</span><span class="tds-meta">Article 6(5) · ICT risk management</span></span><span class="tds-queue-row__aside"><span class="tds-badge tds-badge--warning">Not reviewed</span><span class="tds-meta">CIF condition</span></span></button></li>
+          <li><button class="tds-queue-row" data-mp="MP-0043"><span class="tds-queue-row__main"><span class="tds-queue-row__name">Board oversight of ICT risk</span><span class="tds-meta">Article 5 · ICT risk management</span></span><span class="tds-queue-row__aside"><span class="tds-badge tds-badge--info">In progress</span></span></button></li>
+          <li><button class="tds-queue-row" data-mp="MP-0044"><span class="tds-queue-row__main"><span class="tds-queue-row__name">ICT third-party register</span><span class="tds-meta">Article 28 · Third-party risk</span></span><span class="tds-queue-row__aside"><span class="tds-badge tds-badge--success">Approved</span></span></button></li>
+        </ul>
+        <div class="tds-empty-state" id="queue-empty" hidden><h3>No provisions in this queue</h3><p id="queue-empty-copy">Change the Smart Queue or reset filters.</p><button class="tds-button tds-button--secondary" id="reset-filters">Reset filters</button></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="tds-work-area" id="assessment-main" tabindex="-1">
+    <section class="tds-panel" id="assessment-panel" aria-busy="false">
+      <div id="no-selection" class="tds-empty-state" hidden>
+        <h2>No Material Provision selected</h2>
+        <p>Select a Material Provision from the queue to begin or continue an assessment.</p>
+      </div>
+      <div id="assessment-content">
+        <div class="tds-object-header">
+          <div class="tds-object-header__identity">
+            <div class="tds-inline">
+              <span class="tds-eyebrow">Material Provision · MP-0042</span>
+              <span class="tds-badge tds-badge--info">Calculated</span>
+              <span class="tds-badge tds-badge--warning" id="object-state">Not reviewed</span>
+            </div>
+            <div class="tds-object-header__title-line">
+              <h2 class="tds-object-title">Document and review the ICT risk management framework</h2>
+            </div>
+            <span class="tds-meta">Requirement Cluster CLUSTER_0016 · Article 6(5) DORA L1 · L2 elaboration linked</span>
+          </div>
+          <div class="tds-object-header__actions">
+            <div class="tds-live-status tds-live-status--success" id="save-state" role="status" aria-live="polite">✓ Saved automatically</div>
+            <button class="tds-button tds-button--secondary" id="set-aside">Set aside</button>
+            <button class="tds-button tds-button--primary" id="submit-review">Submit for review</button>
+          </div>
+        </div>
+
+        <div class="tds-provenance" aria-label="Assessment provenance">
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Legal source</span><span class="tds-provenance__value">Regulation (EU) 2022/2554 · Article 6(5)</span></span>
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Address</span><span class="tds-provenance__value">…/reg/2022/2554/art_6/par_5</span></span>
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Requirement Cluster</span><span class="tds-provenance__value">CLUSTER_0016 · v7</span></span>
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Legal context basis</span><span class="tds-provenance__value">Calculated · context map v3</span></span>
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Dictionary/model</span><span class="tds-provenance__value">DORA dictionary 1.2 · corpus build 2026-09-18</span></span>
+          <span class="tds-provenance__item"><span class="tds-provenance__label">Assessor</span><span class="tds-provenance__value" id="assessor-value">A. Officer · 21 Sep 2026 10:32</span></span>
+        </div>
+
+        <div class="tds-panel__body">
+          <div id="state-callout"></div>
+
+          <section class="tds-section">
+            <div class="tds-section__header">
+              <div><div class="tds-eyebrow">1 · Applicability</div><h3 class="tds-section-title">Does this Material Provision apply to this assessment subject?</h3></div>
+              <span class="tds-badge tds-badge--info">Suggested · Applicable</span>
+            </div>
+            <p class="tds-meta">Calculated from firm/entity scope, `qualifier_asked`, exemptions, scope gates and relevant conditions. Human decision remains explicit.</p>
+            <fieldset id="applicability-fieldset">
+              <legend class="tds-label">Applicability decision</legend>
+              <div class="tds-segmented" aria-label="Applicability decision">
+                <label><input type="radio" name="applicability" value="applicable"><span>Applicable</span></label>
+                <label><input type="radio" name="applicability" value="na"><span>Not applicable</span></label>
+              </div>
+            </fieldset>
+            <label class="tds-field"><span class="tds-label">Applicability rationale</span><textarea class="tds-textarea" id="applicability-rationale" placeholder="Explain entity scope, qualifier, exemption or condition basis."></textarea></label>
+          </section>
+
+          <hr class="tds-divider">
+
+          <section class="tds-section" id="compliance-section">
+            <div class="tds-section__header">
+              <div><div class="tds-eyebrow">2 · Compliance assessment</div><h3 class="tds-section-title">Assess the generated legal criteria</h3></div>
+              <span class="tds-badge">User-entered decision</span>
+            </div>
+
+            <div class="tds-decision-record">
+              <header class="tds-decision-record__header">
+                <div><div class="tds-eyebrow">Generated criterion AC-001</div><h4 class="tds-section-title">The ICT risk management framework is documented and reviewed at the legally required moments.</h4></div>
+                <span class="tds-badge tds-badge--info">Calculated</span>
+              </header>
+              <span class="tds-meta">Basis: Article 6(5) + Article 27 CDR (EU) 2024/1774</span>
+            </div>
+
+            <fieldset id="compliance-fieldset">
+              <legend class="tds-label">Assessment outcome</legend>
+              <div class="tds-segmented" aria-label="Assessment outcome">
+                <label><input type="radio" name="outcome" value="compliant"><span>Compliant</span></label>
+                <label><input type="radio" name="outcome" value="partial"><span>Partially compliant</span></label>
+                <label><input type="radio" name="outcome" value="non-compliant"><span>Non-compliant</span></label>
+              </div>
+            </fieldset>
+            <label class="tds-field"><span class="tds-label">Assessment rationale</span><textarea class="tds-textarea" id="assessment-rationale" placeholder="Explain the conclusion against the generated criteria."></textarea></label>
+          </section>
+
+          <hr class="tds-divider">
+
+          <section class="tds-section">
+            <div class="tds-section__header"><div><div class="tds-eyebrow">Internal organisational data</div><h3 class="tds-section-title">Linked controls</h3></div><button class="tds-button tds-button--secondary tds-button--compact">Link control</button></div>
+            <div class="tds-table-wrap" tabindex="0" aria-label="Linked controls">
+              <table class="tds-table">
+                <caption>Controls linked to this Material Provision</caption>
+                <thead><tr><th scope="col">Control</th><th scope="col">Owner</th><th scope="col">Coverage</th><th scope="col">Status</th></tr></thead>
+                <tbody><tr><td>ICT-RM-07 · Annual framework review</td><td>IT Risk</td><td>AC-001, AC-002</td><td><span class="tds-badge">Internal</span></td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="tds-section">
+            <div class="tds-section__header"><div><div class="tds-eyebrow">Evidence</div><h3 class="tds-section-title">Evidence linked to the decision</h3></div><button class="tds-button tds-button--secondary tds-button--compact" id="add-evidence">Add evidence</button></div>
+            <div class="tds-evidence-list" id="evidence-list">
+              <div class="tds-evidence-row">
+                <div class="tds-evidence-row__summary">
+                  <div class="tds-evidence-row__identity"><span class="tds-evidence-row__title">2026 ICT Risk Framework Review Report</span><span class="tds-meta">Document · Internal evidence · uploaded by A. Officer</span></div>
+                  <span class="tds-badge tds-badge--success">Linked</span>
+                  <button class="tds-button tds-button--quiet tds-button--compact">Preview</button>
+                </div>
+              </div>
+            </div>
+            <div class="tds-empty-state" id="evidence-empty" hidden><h3>No evidence linked</h3><p>Add a document, link, upload reference, or evidence request.</p><button class="tds-button tds-button--secondary">Add evidence</button></div>
+          </section>
+
+          <section class="tds-section" id="remediation-section" hidden>
+            <div class="tds-section__header"><div><div class="tds-eyebrow">Finding & remediation</div><h3 class="tds-section-title">Remediation required</h3></div><span class="tds-badge tds-badge--danger">Gap</span></div>
+            <div class="tds-callout tds-callout--warning"><div class="tds-callout__title">Assessment requires remediation</div><p>Assign an owner and due date before the decision can be submitted for review.</p></div>
+            <div class="tds-content-grid">
+              <label class="tds-field"><span class="tds-label">Severity</span><select class="tds-select"><option>Medium</option><option>High</option><option>Critical</option></select></label>
+              <label class="tds-field"><span class="tds-label">Remediation owner</span><input class="tds-input" value="Head of IT Risk"></label>
+              <label class="tds-field"><span class="tds-label">Due date</span><input class="tds-input" type="date" value="2026-12-15"></label>
+              <label class="tds-field"><span class="tds-label">Action</span><input class="tds-input" value="Complete documented review and evidence pack"></label>
+            </div>
+          </section>
+
+          <hr class="tds-divider">
+
+          <section class="tds-section">
+            <div class="tds-section__header"><div><div class="tds-eyebrow">Review & approval</div><h3 class="tds-section-title">Maker / checker state</h3></div><span class="tds-badge" id="review-badge">Draft</span></div>
+            <div class="tds-approval" id="approval-state">
+              <span class="tds-meta">Prepared by A. Officer · checker not yet assigned</span>
+            </div>
+          </section>
+
+          <div class="tds-disclosure">
+            <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="audit-region"><span class="tds-disclosure__chevron">›</span>Audit history <span class="tds-badge">4</span></button>
+            <div class="tds-disclosure__content" id="audit-region" hidden>
+              <div class="tds-audit-list">
+                <div class="tds-audit-event"><time datetime="2026-09-21T10:32">21 Sep · 10:32</time><span><strong>A. Officer</strong> opened the assessment for MP-0042.</span><span class="tds-badge">User action</span></div>
+                <div class="tds-audit-event"><time datetime="2026-09-21T10:31">21 Sep · 10:31</time><span><strong>System</strong> resolved context map v3 from Requirement Cluster v7.</span><span class="tds-badge tds-badge--info">Calculated</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="tds-rail tds-rail--right" aria-label="Legal context and supporting reference">
+    <header class="tds-rail__header">
+      <div class="tds-eyebrow">Supporting material</div>
+      <h2 class="tds-section-title">Legal context</h2>
+      <div class="tds-inline"><span class="tds-badge tds-badge--info">Calculated map v3</span><span class="tds-badge">6 links</span></div>
+      <label class="tds-field"><span class="tds-label">Find in context</span><input class="tds-input" placeholder="Article, term, role"></label>
+    </header>
+    <div class="tds-rail__body tds-panel__body">
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="true" aria-controls="requirement-provisions"><span class="tds-disclosure__chevron">›</span>Requirement Provisions <span class="tds-badge">1</span></button>
+        <div class="tds-disclosure__content" id="requirement-provisions">
+          <article class="tds-legal-block"><header class="tds-legal-block__header"><div class="tds-inline"><span class="tds-badge">Requirement</span><span class="tds-badge tds-badge--info">Calculated</span></div><h3 class="tds-section-title">Article 6(5)</h3><span class="tds-meta">Regulation (EU) 2022/2554 · DORA L1</span></header><div class="tds-legal-block__text"><div class="tds-legal-paragraph"><span class="tds-legal-paragraph__number">5.</span><p>The ICT risk management framework shall be documented and reviewed at least once a year, and following the legally specified events.</p></div></div></article>
+        </div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="true" aria-controls="scoping-context"><span class="tds-disclosure__chevron">›</span>Scoping <span class="tds-badge">1</span></button>
+        <div class="tds-disclosure__content" id="scoping-context">
+          <article class="tds-legal-block"><header class="tds-legal-block__header"><div class="tds-inline"><span class="tds-badge">Scoping</span><span class="tds-badge tds-badge--info">Calculated</span></div><h3 class="tds-section-title">Article 2(1)–(2)</h3><span class="tds-meta">Scope basis · relation: scopes</span></header><div class="tds-legal-block__text"><p>Financial-entity scope relevant to the assessment subject.</p></div></article>
+        </div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="foundation-context"><span class="tds-disclosure__chevron">›</span>Foundational <span class="tds-badge">1</span></button>
+        <div class="tds-disclosure__content" id="foundation-context" hidden>
+          <article class="tds-legal-block"><header class="tds-legal-block__header"><span class="tds-badge">Foundational</span><h3 class="tds-section-title">Article 15</h3><span class="tds-meta">Legal basis for RTS content and format.</span></header><div class="tds-legal-block__text"><p>Foundational mandate for the Level 2 reporting requirements.</p></div></article>
+        </div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="definition-context"><span class="tds-disclosure__chevron">›</span>Definitions <span class="tds-badge">2</span></button>
+        <div class="tds-disclosure__content" id="definition-context" hidden><span class="tds-meta">Only definitions actually used by this Material Provision are included.</span></div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="explanatory-context"><span class="tds-disclosure__chevron">›</span>Explanatory <span class="tds-badge">1</span></button>
+        <div class="tds-disclosure__content" id="explanatory-context" hidden><article class="tds-legal-block"><header class="tds-legal-block__header"><span class="tds-badge">Explanatory</span><h3 class="tds-section-title">Article 4(1) — Proportionality</h3></header><div class="tds-legal-block__text"><p>Used as assessment guidance; it is not silently converted into a separate obligation criterion.</p></div></article></div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="exemption-context"><span class="tds-disclosure__chevron">›</span>Exemptions <span class="tds-badge">0</span></button>
+        <div class="tds-disclosure__content" id="exemption-context" hidden><span class="tds-meta">No mapped exemption applies to this Material Provision in the current context map.</span></div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="elaboration-context"><span class="tds-disclosure__chevron">›</span>L1/L2 elaboration <span class="tds-badge">1</span></button>
+        <div class="tds-disclosure__content" id="elaboration-context" hidden><article class="tds-legal-block"><header class="tds-legal-block__header"><div class="tds-inline"><span class="tds-badge">Elaboration</span><span class="tds-badge tds-badge--info">Calculated</span></div><h3 class="tds-section-title">Article 27 CDR (EU) 2024/1774</h3></header><div class="tds-legal-block__text"><p>Specifies the format and content of the report on the review of the ICT risk management framework.</p></div></article></div>
+      </div>
+
+      <div class="tds-disclosure">
+        <button class="tds-disclosure__trigger" aria-expanded="false" aria-controls="relationship-basis"><span class="tds-disclosure__chevron">›</span>Relationship basis</button>
+        <div class="tds-disclosure__content" id="relationship-basis" hidden>
+          <div class="tds-provenance" aria-label="Context mapping provenance">
+            <span class="tds-provenance__item"><span class="tds-provenance__label">Role</span><span class="tds-provenance__value">scoping / foundational / elaboration</span></span>
+            <span class="tds-provenance__item"><span class="tds-provenance__label">Method</span><span class="tds-provenance__value">Rules before model assistance</span></span>
+            <span class="tds-provenance__item"><span class="tds-provenance__label">Authority</span><span class="tds-provenance__value">Calculated · human-reviewable basis</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<dialog class="tds-dialog" id="filters-dialog" aria-labelledby="filters-title">
+  <div class="tds-dialog__header"><h2 class="tds-section-title" id="filters-title">Assessment filters</h2><button class="tds-icon-button" aria-label="Close filters" data-close="filters-dialog">×</button></div>
+  <div class="tds-dialog__body tds-stack">
+    <label class="tds-field"><span class="tds-label">CIF relevance</span><select class="tds-select"><option>Any</option><option>Condition indicates CIF relevance</option><option>No CIF condition</option></select><span class="tds-field__hint">Condition-derived/calculated; `criticality` is deferred in DORA dictionary v1.2.</span></label>
+    <label class="tds-field"><span class="tds-label">Modality</span><select class="tds-select"><option>Any</option><option>Obligation</option><option>Prohibition</option><option>Permission</option><option>Right</option></select></label>
+    <label class="tds-field"><span class="tds-label">Topic</span><select class="tds-select"><option>Any</option><option>ICT risk management</option><option>Incident management</option><option>Resilience testing</option><option>Third-party risk</option></select></label>
+    <label class="tds-field"><span class="tds-label">Risk / materiality</span><select class="tds-select"><option>Any internal/calculated score</option><option>High organisational priority</option></select><span class="tds-field__hint">Internal/calculated data; `materiality` is deferred in DORA dictionary v1.2.</span></label>
+    <label class="tds-field"><span class="tds-label">Control coverage</span><select class="tds-select"><option>Any</option><option>Controls linked</option><option>No controls linked</option></select></label>
+    <label class="tds-field"><span class="tds-label">Assessment result</span><select class="tds-select"><option>Any</option><option>Not reviewed</option><option>Compliant</option><option>Partially compliant</option><option>Non-compliant</option><option>Not applicable</option></select></label>
+    <label class="tds-field"><span class="tds-label">Remediation owner</span><select class="tds-select"><option>Any</option><option>Unassigned</option><option>Assigned</option></select></label>
+    <label class="tds-field"><span class="tds-label">Board / audit / escalation relevance</span><select class="tds-select"><option>Any internal classification</option><option>Relevant</option></select><span class="tds-field__hint">Internal/platform classification, not a DORA corpus field.</span></label>
+  </div>
+  <div class="tds-dialog__footer"><button class="tds-button tds-button--secondary" data-close="filters-dialog">Cancel</button><button class="tds-button tds-button--primary" data-close="filters-dialog">Apply filters</button></div>
+</dialog>
+
+<dialog class="tds-dialog" id="basis-dialog" aria-labelledby="basis-title">
+  <div class="tds-dialog__header"><h2 class="tds-section-title" id="basis-title">Assessment basis</h2><button class="tds-icon-button" aria-label="Close assessment basis" data-close="basis-dialog">×</button></div>
+  <div class="tds-dialog__body">
+    <div class="tds-provenance">
+      <span class="tds-provenance__item"><span class="tds-provenance__label">Requirement grouping</span><span class="tds-provenance__value">Officer cluster set · v7</span></span>
+      <span class="tds-provenance__item"><span class="tds-provenance__label">Legal Context Map</span><span class="tds-provenance__value">Officer context map · v3</span></span>
+      <span class="tds-provenance__item"><span class="tds-provenance__label">Calculated</span><span class="tds-provenance__value">60 Material Provisions + 60 Assessment Packages</span></span>
+    </div>
+  </div>
+  <div class="tds-dialog__footer"><button class="tds-button tds-button--secondary" data-close="basis-dialog">Close</button></div>
+</dialog>
+
+<dialog class="tds-dialog" id="consequence-dialog" aria-labelledby="consequence-title">
+  <div class="tds-dialog__header"><h2 class="tds-section-title" id="consequence-title">Set aside MP-0042?</h2><button class="tds-icon-button" aria-label="Close confirmation" data-close="consequence-dialog">×</button></div>
+  <div class="tds-dialog__body"><p>This changes the workflow state for MP-0042 only. It does not mean the Material Provision is legally not applicable, and it does not modify its Requirement Cluster or Legal Context Map.</p><label class="tds-field"><span class="tds-label">Reason</span><textarea class="tds-textarea" required></textarea></label></div>
+  <div class="tds-dialog__footer"><button class="tds-button tds-button--secondary" data-close="consequence-dialog">Cancel</button><button class="tds-button tds-button--danger" data-close="consequence-dialog">Set aside</button></div>
+</dialog>
+
+<script>
+(() => {
+  'use strict';
+  const $=(s)=>document.querySelector(s), $$=(s)=>Array.from(document.querySelectorAll(s));
+
+  $$('.tds-disclosure__trigger').forEach((button)=>button.addEventListener('click',()=>{
+    const expanded=button.getAttribute('aria-expanded')==='true';
+    const region=document.getElementById(button.getAttribute('aria-controls'));
+    button.setAttribute('aria-expanded',String(!expanded));
+    region.hidden=expanded;
+  }));
+
+  function openDialog(id){ document.getElementById(id).showModal(); }
+  $$('[data-close]').forEach((button)=>button.addEventListener('click',()=>document.getElementById(button.dataset.close).close()));
+  $('#filters-button').addEventListener('click',()=>openDialog('filters-dialog'));
+  $('#basis-button').addEventListener('click',()=>openDialog('basis-dialog'));
+  $('#set-aside').addEventListener('click',()=>openDialog('consequence-dialog'));
+
+  function clearRadios(){
+    $$('input[name="applicability"],input[name="outcome"]').forEach((input)=>{input.checked=false;input.disabled=false;});
+  }
+  function setReadonly(value){
+    $$('#assessment-content textarea, #assessment-content input[type="text"], #assessment-content input[type="date"], #assessment-content select').forEach((control)=>{
+      if(control.closest('dialog')) return;
+      if(control.tagName==='TEXTAREA'||control.type==='text'||control.type==='date') {
+        if(value) { control.setAttribute('readonly',''); control.setAttribute('aria-readonly','true'); }
+        else { control.removeAttribute('readonly'); control.removeAttribute('aria-readonly'); }
+      } else control.disabled=value;
+    });
+    $$('input[type="radio"]').forEach((input)=>input.disabled=value);
+    $('#submit-review').disabled=value;
+  }
+  function badge(text,kind=''){ return `<span class="tds-badge ${kind}">${text}</span>`; }
+
+  function applyScenario(name){
+    const panel=$('#assessment-panel'), content=$('#assessment-content'), noSelection=$('#no-selection');
+    const callout=$('#state-callout'), save=$('#save-state'), objectState=$('#object-state'), reviewBadge=$('#review-badge');
+    const approval=$('#approval-state'), remediation=$('#remediation-section'), evidence=$('#evidence-list'), evidenceEmpty=$('#evidence-empty');
+    const queueList=$('#queue-list'), queueEmpty=$('#queue-empty'), queueCopy=$('#queue-empty-copy');
+    panel.setAttribute('aria-busy','false'); content.hidden=false; noSelection.hidden=true; queueList.hidden=false; queueEmpty.hidden=true;
+    callout.innerHTML=''; remediation.hidden=true; evidence.hidden=false; evidenceEmpty.hidden=true; clearRadios(); setReadonly(false);
+    save.className='tds-live-status tds-live-status--success'; save.textContent='✓ Saved automatically';
+    objectState.className='tds-badge tds-badge--warning'; objectState.textContent='Not reviewed';
+    reviewBadge.className='tds-badge'; reviewBadge.textContent='Draft';
+    approval.innerHTML='<span class="tds-meta">Prepared by A. Officer · checker not yet assigned</span>';
+    $('#submit-review').textContent='Submit for review';
+
+    if(name==='no-selection'){ content.hidden=true; noSelection.hidden=false; return; }
+    if(name==='empty-queue'||name==='no-results'){ queueList.hidden=true; queueEmpty.hidden=false; queueCopy.textContent=name==='empty-queue'?'The selected Smart Queue currently has no Material Provisions.':'No Material Provisions match the current filters.'; return; }
+    if(name==='loading'){ panel.setAttribute('aria-busy','true'); save.className='tds-live-status'; save.textContent='Loading assessment…'; return; }
+    if(name==='error'){ callout.innerHTML='<div class="tds-callout tds-callout--danger" role="alert"><div class="tds-callout__title">Assessment could not be loaded</div><p>The legal-context snapshot is unavailable. No assessment decision has been changed.</p></div>'; save.className='tds-live-status tds-live-status--danger'; save.textContent='⚠ Not saved'; return; }
+    if(name==='saving'){ save.className='tds-live-status'; save.textContent='Saving…'; return; }
+    if(name==='save-failed'){ save.className='tds-live-status tds-live-status--danger'; save.textContent='⚠ Not saved'; return; }
+    if(name==='saved') return;
+
+    if(name==='in-progress'){ document.querySelector('input[name="applicability"][value="applicable"]').checked=true; objectState.className='tds-badge tds-badge--info'; objectState.textContent='In progress'; return; }
+    if(name==='not-applicable'){ document.querySelector('input[name="applicability"][value="na"]').checked=true; objectState.className='tds-badge'; objectState.textContent='Not applicable'; $('#compliance-fieldset').disabled=true; return; }
+
+    document.querySelector('input[name="applicability"][value="applicable"]').checked=true;
+    if(name==='compliant'||name==='ready'||name==='approved') document.querySelector('input[name="outcome"][value="compliant"]').checked=true;
+    if(name==='partial'||name==='remediation') { document.querySelector('input[name="outcome"][value="partial"]').checked=true; remediation.hidden=false; }
+    if(name==='non-compliant') { document.querySelector('input[name="outcome"][value="non-compliant"]').checked=true; remediation.hidden=false; }
+    if(name==='no-evidence') { evidence.hidden=true; evidenceEmpty.hidden=false; }
+    if(name==='evidence-linked') { objectState.className='tds-badge tds-badge--info'; objectState.textContent='In progress'; }
+
+    if(name==='compliant'){ objectState.className='tds-badge tds-badge--success'; objectState.textContent='Compliant'; }
+    if(name==='partial'||name==='remediation'){ objectState.className='tds-badge tds-badge--warning'; objectState.textContent='Partially compliant'; }
+    if(name==='non-compliant'){ objectState.className='tds-badge tds-badge--danger'; objectState.textContent='Non-compliant'; }
+    if(name==='ready'){ objectState.className='tds-badge tds-badge--info'; objectState.textContent='Ready for review'; reviewBadge.className='tds-badge tds-badge--info'; reviewBadge.textContent='Ready for review'; }
+    if(name==='approved'){ objectState.className='tds-badge tds-badge--success'; objectState.textContent='Approved · Compliant'; reviewBadge.className='tds-badge tds-badge--success'; reviewBadge.textContent='Approved'; approval.innerHTML='<span class="tds-meta">Prepared by A. Officer · approved by B. Reviewer · 21 Sep 2026 11:04</span>'; setReadonly(true); }
+    if(name==='returned'){ objectState.className='tds-badge tds-badge--warning'; objectState.textContent='Returned for changes'; reviewBadge.className='tds-badge tds-badge--warning'; reviewBadge.textContent='Returned'; callout.innerHTML='<div class="tds-callout tds-callout--warning"><div class="tds-callout__title">Returned by B. Reviewer</div><p>Provide evidence of management-body approval of the review report.</p></div>'; }
+    if(name==='stale-grouping'||name==='stale-context'){ const grouping=name==='stale-grouping'; objectState.className='tds-badge tds-badge--warning'; objectState.textContent=grouping?'Not assessed — grouping changed':'Review required — legal context changed'; callout.innerHTML=`<article class="tds-decision-record tds-decision-record--stale"><header class="tds-decision-record__header"><div><div class="tds-eyebrow">Stale assessment</div><h3 class="tds-section-title">${grouping?'Requirement Cluster changed after assessment':'Legal Context Map changed after assessment'}</h3></div>${badge('Review required','tds-badge--warning')}</header><p style="margin:0">The previous approved decision remains in audit history but is not current.</p></article>`; }
+  }
+
+  $('#scenario').addEventListener('change',(event)=>applyScenario(event.target.value));
+  $('#submit-review').addEventListener('click',()=>{ $('#scenario').value='ready'; applyScenario('ready'); });
+  $('#next-unreviewed').addEventListener('click',()=>$('#assessment-main').focus());
+  $('#reset-filters').addEventListener('click',()=>{ $('#scenario').value='not-reviewed'; applyScenario('not-reviewed'); });
+
+  applyScenario('not-reviewed');
+})();
+</script>
+</body>
+</html>
